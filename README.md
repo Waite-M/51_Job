@@ -8,3 +8,5 @@
 ###   1.3 piplines.py中定义存储的路径
 ![Image text](https://github.com/Waite-M/ZhiLian_Job/blob/master/%E5%9B%BE%E7%89%87/%E7%A4%BA%E4%BE%8B%E5%9B%BE%E7%89%872.png)
 ###   1.4 运行scrapy爬虫获取所需信息
+
+本爬虫仅供学习参考，非本人使用而产生的纠纷与一切后果均与本人无关。
