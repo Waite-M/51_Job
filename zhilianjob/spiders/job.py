@@ -10,10 +10,9 @@ class JobSpider(scrapy.Spider):
     #搜索职位
     job = 'php'
     #地点
-    position = '广州'
+    position = '深圳'
     #爬取页数
-    pages = '5'
-
+    pages = '3'
     #解析js获取城市id
     def parse(self, response):
         city = re.findall(r'window.area={(.*?)"}', response.text)
@@ -30,9 +29,12 @@ class JobSpider(scrapy.Spider):
             yield scrapy.Request(searchurl,callback=self.parse_joblist,meta={'page':i+1})
     #解析搜索页面获取详细信息url
     def parse_joblist(self,response):
-        jobdetail = response.xpath('//*[@id="resultList"]/div/p/span/a/@href').extract()
+        jstext = response.xpath('/html/body/script[2]/text()').extract()
+        jobdetail = re.findall(r'job_href":"(.*?)"',str(jstext))
         for url in jobdetail:
-            yield scrapy.Request(url,callback=self.parse_detail,meta={'page':response.meta['page']})
+            detailurl = url.replace('\\\\','')
+            self.log(detailurl)
+            yield scrapy.Request(detailurl,callback=self.parse_detail,meta={'page':response.meta['page']})
     #解析职业详细信息页面
     def parse_detail(self,response):
         item = {}

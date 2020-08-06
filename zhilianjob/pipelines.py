@@ -8,18 +8,20 @@ import os
 import xlrd
 import xlwt
 from xlutils import copy
+import datetime
 
 class ZhilianjobPipeline:
     def open_spider(self, spider):
         #定义excel存储的路径
-        self.path = 'D:/spider/php'
+        self.path = 'D:/spider/php/'
         if not os.path.exists(self.path):
             os.makedirs(self.path,0o777)
+        self.file = self.path + str(datetime.date.today()) + 'job.xls'
     def close_spider(self, spider):
         pass
     def process_item(self, item, spider):
         #文件不存在则先创建文件
-        if not os.path.exists(self.path + '/job.xls'):
+        if not os.path.exists(self.file):
             wt = xlwt.Workbook()
             sheet = wt.add_sheet(item['page'])
             titlelist = ['职位','公司','地区','经验','学历','需求人数','职位信息','公司福利及信息']
@@ -31,10 +33,10 @@ class ZhilianjobPipeline:
             for i in range(len(titlelist)):
                 sheet.write(0,i,titlelist[i])
                 sheet.write(1, i,listitem[i])
-            wt.save(self.path + '/job.xls')
+            wt.save(self.file)
             print('写入成功1')
         else:
-            rd = xlrd.open_workbook(self.path + '/job.xls')
+            rd = xlrd.open_workbook(self.file)
             wt = copy.copy(rd)
             #以爬取页数命名的工作表名称是否在的工作表中
             if item['page'] not in rd.sheet_names():
@@ -53,7 +55,7 @@ class ZhilianjobPipeline:
             else:
                 for i in range(len(titlelist)):
                     sheet.write(row, i, listitem[i])
-            wt.save(self.path + '/job.xls')
+            wt.save(self.file)
             print('写入成功2')
 
     # 将item字典转换为list写入
